@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Karyawan {
+  id         Int         @id @default(autoincrement())
+  nik        String      @unique
+  nama       String
+  email      String      @unique
+  jabatan    String
+  gaji       Int
+  absensis   Absensi[]
+  penjualans Penjualan[]
+}
+
+model Absensi {
+  id                Int      @id @default(autoincrement())
+  karyawanId        Int
+  status_kehadiran  String
+  karyawan          Karyawan @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
+}
+
+model Penjualan {
+  id                Int      @id @default(autoincrement())
+  karyawanId        Int
+  total_pendapatan  Int
+  tanggal_transaksi DateTime @default(now())
+  karyawan          Karyawan @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
+}
